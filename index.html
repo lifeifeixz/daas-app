@@ -5,6 +5,10 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
 		<style type="text/css">
+			body{
+				width: 100%;
+				height: 100%;
+			}
 			.variety {
 				width: 200px;
 				height: 100px;
@@ -31,6 +35,22 @@
 			td{
 				cursor: pointer;
 			}
+			@media screen and (min-width: 320px) and (max-width: 1156px){
+				.datalist{
+					top:80px;
+				}
+				.variety{
+					position: fixed;
+					bottom: 10px;
+					top: 80%;
+					left: 20%;
+					width: 80%;
+					background: none;
+				}
+				.variety input,button,select{
+					width:100px;
+				}
+			}
 		</style>
 	</head>
 
@@ -38,7 +58,6 @@
 		<div id="container" style="height: 100%"></div>
 		<div class="variety">
 			<input type="date" id="date" />
-			<br>
 			<select id="varietyLarge" onchange="varietyLarge(this)">
 				<option value="">请选择大类</option>
 				<option value="2">畜产品</option>
@@ -215,7 +234,7 @@
 				$("#area-p").append(str);
 			}
 			window.onload=function(){
-				send();
+				//send();
 			}
 		</script>
 	</body>
