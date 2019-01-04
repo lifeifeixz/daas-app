@@ -229,12 +229,12 @@
 					}
 					var name = data[i].name;
 					name=name.substring(0,10);
-					str+="<tr><td align=\"right\" style=\"color:"+color+";\" class=\"val\">￥"+(data[i].value/10)+"/KG</td><td align=\"left\"><a href='http://www.baidu.com' target='_blank'><span title='"+data[i].name+"'>"+name+"...</span></a></td></tr>";
+					str+="<tr><td align=\"right\" style=\"color:"+color+";\" class=\"val\">￥"+(data[i].value/10)+"/KG</td><td align=\"left\"><a href='annualTrend.html?make="+data[i].make+"' target='_blank'><span title='"+data[i].name+"'>"+name+"...</span></a></td></tr>";
 				}
 				$("#area-p").append(str);
 			}
 			window.onload=function(){
-				//send();
+				send();
 			}
 		</script>
 	</body>
