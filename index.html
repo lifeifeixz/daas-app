@@ -186,8 +186,10 @@
 				if(varietyName!=null&&varietyName!=''){
 					param.varietyName=varietyName;
 					option.title.text=title.replace("￥",varietyName);
+					window.nameTemp = varietyName;
 				}else{
 					option.title.text=title.replace("￥","山药");
+                    window.nameTemp = "山药";
 				}
 				if(StrUtil.isNotBlank(date)) {
 					param.date = date;
@@ -229,7 +231,7 @@
 					}
 					var name = data[i].name;
 					name=name.substring(0,10);
-					str+="<tr><td align=\"right\" style=\"color:"+color+";\" class=\"val\">￥"+(data[i].value/10)+"/KG</td><td align=\"left\"><a href='annualTrend.html?make="+data[i].make+"' target='_blank'><span title='"+data[i].name+"'>"+name+"...</span></a></td></tr>";
+					str+="<tr><td align=\"right\" style=\"color:"+color+";\" class=\"val\">￥"+(data[i].value/10)+"/KG</td><td align=\"left\"><a href='sellerTrend.html?seller="+data[i].name+"&name="+window.nameTemp+"' target='_blank'><span title='"+data[i].name+"'>"+name+"...</span></a></td></tr>";
 				}
 				$("#area-p").append(str);
 			}

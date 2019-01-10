@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body style="height: 100%; margin: 0">
+<div id="container" style="height: 100%"></div>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+<script type="text/javascript"
+        src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/business.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    option = {
+        title: {
+            text: '[天津市东丽区金钟蔬菜市场] 山药价格近两年走势图'
+        },
+        tooltip: {
+            trigger: 'axis'
+        },
+        legend: {
+            data: ['2017年']
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        toolbox: {
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        xAxis: {
+            type: 'category',
+            boundaryGap: false,
+            data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月']
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [{
+            name: '2017年',
+            type: 'line',
+            stack: '总量',
+            data: [6,
+                6.08,
+                6,
+                5.76,
+                5.89,
+                6,
+                6,
+                6,
+                6,
+                6,
+                6,
+                6
+            ]
+        }
+        ]
+    };
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+    window.onload = function () {
+        var seller = URLUtil.getParameter("seller");
+        var name = URLUtil.getParameter("name");
+        $.ajax({
+            type: "get",
+            url: SellerTrendPrice + "?seller=" + seller + "&name=" + name,
+            async: true,
+            success: function (data) {
+                var days = [];
+                var vals = [];
+                for (var i = 0; i < data.length; i++) {
+
+                    days.push(data[i].date);
+                    vals.push(data[i].price);
+                }
+                console.log(days)
+                console.log(vals)
+                option.xAxis.data = days;
+                option.series[0].data = vals;
+                console.log(option)
+                myChart.setOption(option, true);
+            }
+        });
+
+    }
+</script>
+</body>
+
+</html>
