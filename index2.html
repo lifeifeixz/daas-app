@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <style type="text/css">
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+
+    </style>
+</head>
+
+<body style="height: 100%; margin: 0">
+<div style="height: 100%;">
+    <div id="container" style="height: 100%"></div>
+</div>
+
+<script type="text/javascript" src="js/echarts/echarts.min.js"></script>
+<script type="text/javascript" src="js/echarts/echarts-gl.min.js"></script>
+<script type="text/javascript" src="js/echarts/ecStat.min.js"></script>
+<script type="text/javascript" src="js/echarts/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>
+<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/variety.js" type="text/javascript" charset="utf-8"></script>
+<script src="js/business.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    $("#date").val(getPreFormatDate());
+    var app = {};
+    option = null;
+    var data = [];
+    var geoCoordMap = {};
+    var param = {
+        varietyName: "山药",
+        date: getPreFormatDate()
+    };
+    option = {
+        title: {
+            text: "全国主要批发市场山药价格一览",
+            subtext: '数据来源-中国商务部',
+            sublink: '技术支持-百度echarts',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        bmap: {
+            center: [104.114129, 37.550339],
+            zoom: 5,
+            roam: true,
+            mapStyle: echartMapStyle
+        },
+        series: [{
+            name: '价格', // 改为价格
+            type: 'scatter',
+            coordinateSystem: 'bmap',
+            data: convertData(data),
+            symbolSize: function (val) {
+                return val[2] / 10;
+            },
+            label: {
+                normal: {
+                    formatter: '{b}',
+                    position: 'right',
+                    show: false
+                },
+                emphasis: {
+                    show: true
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: 'purple'
+                }
+            }
+        },
+            {
+                name: 'Top 5',
+                type: 'effectScatter',
+                coordinateSystem: 'bmap',
+                data: convertData(data.sort(function (a, b) {
+                    return b.value - a.value;
+                }).slice(0, 5)),
+                symbolSize: function (val) {
+                    return val[2] / 10;
+                },
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                label: {
+                    normal: {
+                        formatter: '{b}',
+                        position: 'right',
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'purple',
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel: 1
+            }
+        ]
+    };
+    if (option && typeof option === "object") {
+        //加载数据
+        myChart.setOption(option, true);
+    }
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+
+        },
+        methods: {
+            send: function () {
+                var title = "全国主要批发市场￥价格一览";
+                var date = $("#date").val();
+                var varietyName = $("#variety").val();
+                if (varietyName != null && varietyName != '') {
+                    param.varietyName = varietyName;
+                    option.title.text = title.replace("￥", varietyName);
+                } else {
+                    option.title.text = title.replace("￥", "山药");
+                }
+                if (StrUtil.isNotBlank(date)) {
+                    param.date = date;
+                }
+                myChart.showLoading({text: '正在努力的读取数据中...'});
+                $.ajax({
+                    type: "post",
+                    url: REGIONPRICE,
+                    data: JSON.stringify(param),
+                    contentType: "application/json",
+                    success: function (json) {
+                        myChart.hideLoading();
+                        myChart.clear();
+                        data = json.data;
+                        geoCoordMap = json.geoCoordMap;
+                        option.series[0].data = convertData(data);
+                        option.series[1].data = convertData(data.sort(function (a, b) {
+                            return b.value - a.value;
+                        }).slice(0, 5));
+                        myChart.setOption(option);
+                    }
+                });
+            }
+        },
+        created: function () {
+            this.send();
+        }
+    })
+</script>
+</body>
+
+</html>

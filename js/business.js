@@ -1,4 +1,4 @@
-var baseUrl = "http://114.116.24.215:8080";
+var baseUrl = "http://116.85.20.51:8000";
 //baseUrl="http://localhost:8080";
 var REGIONPRICE = baseUrl + "/prd/variety/regionPrice";
 var VARIETYLARGE = baseUrl + "/prd/variety/large";
