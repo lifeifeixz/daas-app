@@ -3,6 +3,7 @@ var baseUrl = "http://116.85.20.51:8000";
 var REGIONPRICE = baseUrl + "/prd/variety/regionPrice";
 var VARIETYLARGE = baseUrl + "/prd/variety/large";
 var TrendByMark = baseUrl+"/prd/getTrendByMark";
+var SellerTrendPrice = baseUrl+"/prd/seller/priceTrend";
 var echartMapStyle = {
 	styleJson: [{
 		'featureType': 'water',
